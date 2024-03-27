@@ -1,0 +1,31 @@
+//am_96288- HackerRank
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+	int size,sum1=0,result=0;
+        Scanner input=new Scanner(System.in);
+        size=input.nextInt();
+        if(size>0 && size<10) {
+            for (int i = size; i >= 1; --i) {
+
+                for (int j = size; j >= i; --j) {
+                    sum1 += j;
+
+                }
+
+            }
+            result = (sum1 * 4) - (2 * size);
+            System.out.println(result);
+        }
+        else {
+            result=0;
+            System.out.println(result);
+        }
+
+    }
+}
