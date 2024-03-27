@@ -1,0 +1,160 @@
+import java.io.*;
+import java.math.*;
+import java.security.*;
+import java.text.*;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+class Manufacturer {
+  private String manufacturerName;
+  private boolean isLongTermWarranty;
+
+    public Manufacturer(String manufacturerName, boolean isLongTermWarranty) {
+        this.manufacturerName = manufacturerName;
+        this.isLongTermWarranty = isLongTermWarranty;
+    }
+
+
+    public String getManufacturerName() {
+        return manufacturerName;
+    }
+
+
+
+    public boolean isLongTermWarranty() {
+        return isLongTermWarranty;
+    }
+
+
+}
+
+class ElectricDevice {
+    private Manufacturer manufacturer;
+    private int minWarranty;
+
+    public ElectricDevice(Manufacturer manufacturer, int minWarranty) {
+        this.manufacturer = manufacturer;
+        this.minWarranty = minWarranty;
+    }
+
+    public Manufacturer getManufacturer() {
+        return manufacturer;
+    }
+
+
+    public int getMinWarranty() {
+        if (minWarranty>=6)
+        return minWarranty;
+        else {
+            minWarranty=6;
+            return minWarranty;
+        }
+    }
+    int warranty(){
+       if (manufacturer.isLongTermWarranty()) {
+           if (minWarranty>=6)
+           return minWarranty+=12;
+           else {
+               minWarranty=6;
+               return minWarranty;
+           }
+       }
+       else{
+           if (minWarranty>=6)
+               return minWarranty;
+           else {
+               minWarranty=6;
+               return minWarranty;
+           }
+        }
+    }
+
+}
+
+class Cooker extends  ElectricDevice {
+    private boolean isGas;
+
+    public Cooker(Manufacturer manufacturer, int minWarranty, boolean isGas) {
+        super(manufacturer, minWarranty);
+        this.isGas = isGas;
+    }
+
+    int warranty() {
+        if (isGas == true) {
+            if (getManufacturer().isLongTermWarranty()) {
+                return getMinWarranty() + 24;
+            } else
+                return getMinWarranty() + 12;
+        } else {
+            if (getManufacturer().isLongTermWarranty()) {
+                return getMinWarranty() + 12;
+            } else
+                return getMinWarranty();
+        }
+    }
+}
+class WashingMachine extends  ElectricDevice {
+    private boolean isDryer;
+
+    public WashingMachine(Manufacturer manufacturer, int minWarranty, boolean isDryer) {
+        super(manufacturer, minWarranty);
+        this.isDryer = isDryer;
+    }
+    int warranty() {
+        if (isDryer == true) {
+            if (getManufacturer().isLongTermWarranty()) {
+                return (int) (getMinWarranty() +12+ (getMinWarranty()*0.5));
+            } else
+                return (int) (getMinWarranty()+ (getMinWarranty()*0.5));
+        } else {
+            if (getManufacturer().isLongTermWarranty()) {
+                return getMinWarranty() + 12;
+            } else
+                return getMinWarranty();
+        }
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+        String manufacturerName= bufferedReader.readLine();
+
+        boolean isLongTermWarranty = Integer.parseInt(bufferedReader.readLine().trim()) != 0;
+
+        int minWarranty = Integer.parseInt(bufferedReader.readLine().trim());
+
+        boolean isGas = Integer.parseInt(bufferedReader.readLine().trim()) != 0;
+
+        boolean isDryer = Integer.parseInt(bufferedReader.readLine().trim()) != 0;
+        Manufacturer manu1= new Manufacturer(manufacturerName,isLongTermWarranty);
+        
+        ElectricDevice electricDevice = new ElectricDevice(manu1, minWarranty);
+        System.out.println(electricDevice.warranty());
+        electricDevice = new Cooker(manu1, minWarranty, isGas);
+        System.out.println(electricDevice.warranty());
+        electricDevice = new WashingMachine(manu1, minWarranty, isDryer);
+        System.out.println(electricDevice.warranty());
+
+        // Create object of type Manufacturer using the constructor with two parameters. Pass manufacturerName and isLongTermWarranty as arguments
+
+        // Create object of type ElectricDevice using the constructor with 2 parameters. Pass manufacturer and minWarranty as arguments: ElectricDevice electricDevice = new ElectricDevice(manufacturer, minWarranty);
+
+        // Print on the console the warranty of the the object electricDevice, by calling warranty() method
+
+        // Assign the electricDevice a new object of type Cooker using the constructor with 3 parameters. Pass manufacturer, price and minWarranty as arguments: electricDevice = new Cooker(manufacturer, minWarranty, isGas);
+
+        // Print on the console the warranty of the object electricDevice, by calling warranty() method
+
+        // Assign the electricDevice a new object of type WashingMachine using the constructor with 3 parameters. Pass manufacturer, price and minWarranty as arguments: electricDevice = new WashingMachine(manufacturer, minWarranty, isDryer);
+
+        // Print on the console the warranty of the the object electricDevice, by calling warranty() method
+
+        bufferedReader.close();
+    }
+}
