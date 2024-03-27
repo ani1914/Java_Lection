@@ -1,8 +1,6 @@
 package com.citb408;
 
-/**
- * @author Kostadinova
- */
+
 public class Triangle {
 
     private double side1;
