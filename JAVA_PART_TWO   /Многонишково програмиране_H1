@@ -1,0 +1,141 @@
+Задача 1. Да се реализира процесът на ушиване на дрехи в модно ателие. Ателието има име, списък с шивачи и брой на дрехите, които трябва да се ушият. Шивачите работят едновременно и всеки от тях взима една дреха от общото количество на дрехите, които трябва да се ушият, ушива я и взима следваща дреха. Процесът продължава до ушиване на последната дреха. Всеки от шивачите шие в отделна нишка☺. Да се покаже кой от шивачите по колко дрехи е ушил.
+
+
+
+public class Tailor {
+
+    private String name;
+    private int amount;
+
+    public Tailor() {
+        this.name = "NO_NAME";
+        this.amount = 0;
+    }
+
+    public Tailor(String name) {
+        this.name = name;
+        this.amount = 0;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public int getAmountOfTailoredClothes() {
+        return this.amount;
+    }
+
+    public void setAmountOfTailoredClothes() {
+        this.amount++;
+    }
+
+    @Override
+    public String toString() {
+        return "Tailor name - " + this.getName() + ". Clothes tailored - " + this.getAmountOfTailoredClothes();
+    }
+}
+
+
+import java.util.List;
+import java.util.ArrayList;
+
+public class TailoringStudio {
+
+    private int numberOfClothes;
+    private int currentAmount;
+    private List<Tailor> tailorList;
+
+    public TailoringStudio() {
+        this.numberOfClothes = 0;
+        this.currentAmount = 0;
+        this.tailorList = new ArrayList();
+    }
+
+    public TailoringStudio(int amount) {
+        this.numberOfClothes = amount;
+        this.currentAmount = 0;
+        this.tailorList = new ArrayList();
+    }
+
+    public void addTailor(Tailor tailor) {
+        if (!tailorList.contains(tailor)) {
+            tailorList.add(tailor);
+        } else {
+            System.out.println("Tailor is already in the list");
+        }
+    }
+
+    public int numberOfTailors() {
+        return this.tailorList.size();
+    }
+
+    public void startTailoring() {
+        for (final Tailor tailor : this.tailorList) {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    while (currentAmount < numberOfClothes) {
+                        System.out.println(Thread.currentThread().getName() + " " + tailor.getName() + " is tailoring. ");
+                        tailoring(tailor);
+                    }
+                }
+            };
+
+            Thread thread = new Thread(runnable);
+            thread.start();
+        }
+    }
+
+    public synchronized void tailoring(Tailor tailor) {
+        if (this.currentAmount < this.numberOfClothes) {
+            this.currentAmount++;
+            tailor.setAmountOfTailoredClothes();
+        }
+    }
+
+    public String getTailors() {
+        String res = "";
+        for (Tailor tailor : this.tailorList) {
+            res += tailor.toString() + "\n";
+        }
+        return res;
+    }
+
+    public String toString() {
+        return "Tailoring studio clothes to be tailored - " + this.numberOfClothes + "\n"
+                + "Tailoring studio tailors:" + "\n"
+                + getTailors();
+    }
+
+    public int getAmountOfClothes() {
+        return this.numberOfClothes;
+    }
+
+    public void setAmountOfClothes(int num) {
+        this.numberOfClothes = num;
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        TailoringStudio Studio = new TailoringStudio(10);
+        Tailor vasil = new Tailor("Vasil");
+        Tailor gergana = new Tailor("Gergana");
+        Studio.addTailor(vasil);
+        Studio.addTailor(gergana);
+
+        System.out.println(Studio);
+
+        Studio.startTailoring();
+
+        try {
+            Thread.currentThread().sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(Studio);
+    }
+}
