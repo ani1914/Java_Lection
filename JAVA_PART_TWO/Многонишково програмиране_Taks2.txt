@@ -1,0 +1,124 @@
+Да се реализира процесът на закупуване на билети за прожекция в кино. При закупуването на билетите всеки клиент трябва да зададе прожекцията и броя билети, които иска да купи. Закупуването на билети от всеки клиент да се реализира в отделна нишка.
+
+package example2_cinema;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+public class Projection {
+
+    private String name;
+    private int maxNumberOfSeats;
+    private int soldTickets;
+
+    public Projection() {
+    }
+
+    public Projection(String name, int maxNumberOfSeats) {
+        this.name = name;
+        this.maxNumberOfSeats = maxNumberOfSeats;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getMaxNumberOfSeats() {
+        return maxNumberOfSeats;
+    }
+
+    public int getSoldTickets() {
+        return soldTickets;
+    }
+
+    int getAvailableTickets() {
+        return this.maxNumberOfSeats - this.soldTickets;
+    }
+
+    void setTicketsSold(int soldTickets) {
+        this.soldTickets += soldTickets;
+    }
+
+    public synchronized boolean sellTickets(int ticketsNeeded) {
+        System.out.println(Thread.currentThread().getName() + " " +
+                ticketsNeeded + " " + this.getAvailableTickets());
+        if (this.getAvailableTickets() >= ticketsNeeded) {
+            this.setTicketsSold(ticketsNeeded);
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+
+package example2_cinema;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class TicketsSelling implements Runnable {
+
+    private Projection projection;
+    private int ticketsNeeded;
+
+    public TicketsSelling(Projection projection, int ticketsNeeded) {
+        this.projection = projection;
+        this.ticketsNeeded = ticketsNeeded;
+    }
+
+    public Projection getProjection() {
+        return projection;
+    }
+
+    public int getTicketsNeeded() {
+        return ticketsNeeded;
+    }
+
+    @Override
+    public void run() {
+        boolean isSold = projection.sellTickets(ticketsNeeded);
+        if (isSold) {
+            System.out.println("True");
+        } else {
+            System.out.println("False");
+        }
+    }
+
+}
+
+
+import example1_scan.Scan;
+import example2_cinema.Projection;
+import example2_cinema.TicketsSelling;
+import task1_task2_racing.CarRacer;
+import task1_task2_racing.CarRacing;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+       
+        { // Week 12 Example 2 Buying Tickets for a Movie example2_cinema.Projection
+
+            Projection piratesOfTheCaribbean
+                    = new Projection("Pirates of the Caribbean", 100);
+
+            Thread john = new Thread(new TicketsSelling(piratesOfTheCaribbean, 60), "John");
+            Thread marry = new Thread(new TicketsSelling(piratesOfTheCaribbean, 70), "Marry");
+            john.start();
+            marry.start();
+        }
+
+        
+    }
+}

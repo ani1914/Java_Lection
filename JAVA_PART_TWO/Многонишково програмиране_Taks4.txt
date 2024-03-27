@@ -1,0 +1,240 @@
+Да се реализира състезание с коли. Състезанието се провежда на писта с фиксиран брой обиколки, които състезателите трябва да направят. Състезателите се определят от име и тръгват едновременно на старта. Всеки състезател трябва да се пусне в отделна нишка. Да се покаже съобщение, когато състезател приключи състезанието. Да се реализира възможност да се показва списъка с класирането на състезателите след края на състезанието.
+
+
+Продължение на Задача 1. Организаторите на автомобилното състезание осигуряват определено количество гориво, от което състезателите могат да зареждат автомобилите си. Да се реализират средства за зареждане на автомобилите с гориво. Преди всяко зареждане да се показва количеството на останалото налично гориво. 
+
+
+ackage task1_task2_racing;
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class CarRacer {
+
+    private String name;
+
+    public CarRacer(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public String toString() {
+        return "CarRacer{" + "name=" + name + '}';
+    }
+
+}
+
+
+package task1_task2_racing;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Kostadinova
+ */
+public class CarRacing {
+
+    private int numberOfLaps;
+    private List<CarRacer> racers;
+    private List<CarRacer> rankingList;
+    private double fuelQuantity;
+
+    public CarRacing(int numberOfLaps) {
+        this.numberOfLaps = numberOfLaps;
+        racers = new ArrayList();
+        rankingList = new ArrayList();
+    }
+
+    public CarRacing(int numberOfLaps, double fuelQuantity) {
+        racers = new ArrayList();
+        this.numberOfLaps = numberOfLaps;
+        this.fuelQuantity = fuelQuantity;
+        rankingList = new ArrayList();
+
+    }
+
+    public void addRacer(CarRacer carRacer) {
+        racers.add(carRacer);
+    }
+
+    public void race() {
+        for (CarRacer racer : this.racers) {
+            Thread thread = new Thread(new RaceThread(this, racer));
+            thread.start();
+        }
+    }
+
+    public void addRacerToRankingList(CarRacer carRacer) {
+        rankingList.add(carRacer);
+    }
+
+    public void displayRankList() {
+        System.out.println("Rank List: ");
+        for (CarRacer racer : this.rankingList) {
+            System.out.println(racer);
+        }
+    }
+
+    public synchronized boolean fueling(double quantityNeeded) {
+        System.out.println(Thread.currentThread().getName() + " " +
+                quantityNeeded + " " + this.getFuelCurrentQuantity());
+        if (this.getFuelCurrentQuantity() >= quantityNeeded) {
+            this.fuelQuantity -= quantityNeeded;
+            return true;
+        }
+        return false;
+    }
+
+
+    public void startFueling(CarRacer carRacer, final double fuelNeeded) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                boolean isFueled = fueling(fuelNeeded);
+                if (isFueled) {
+                    System.out.println("True");
+                } else {
+                    System.out.println("False");
+                }
+            }
+        };
+        new Thread(runnable, carRacer.getName()).start();
+
+    }
+
+    private double getFuelCurrentQuantity() {
+        return this.fuelQuantity;
+    }
+
+    int getNumberOfLaps() {
+        return this.numberOfLaps;
+    }
+
+}
+
+
+package task1_task2_racing;
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class Refueling implements Runnable {
+
+    private CarRacing racing;
+    private double fuelNeeded;
+
+    public Refueling(CarRacing racing, double fuelNeeded) {
+        this.racing = racing;
+        this.fuelNeeded = fuelNeeded;
+    }
+
+    public double getFuelNeeded() {
+        return fuelNeeded;
+    }
+
+    @Override
+    public void run() {
+        boolean isFueled = racing.fueling(fuelNeeded);
+        if (isFueled) {
+            System.out.println("True");
+        } else {
+            System.out.println("False");
+        }
+    }
+
+}
+
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package task1_task2_racing;
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class RaceThread implements Runnable {
+
+    private CarRacing racing;
+    private CarRacer carRacer;
+
+    public RaceThread(CarRacing racing, CarRacer carRacer) {
+        this.racing = racing;
+        this.carRacer = carRacer;
+    }
+
+    @Override
+    public void run() {
+        for (int i = 1; i <= racing.getNumberOfLaps(); i++) {
+            System.out.println(this.carRacer.getName() + " tour: " + i);
+            if (i == racing.getNumberOfLaps()) {
+                System.out.println(this.carRacer.getName() + " finished the racing!");
+                this.racing.addRacerToRankingList(carRacer);
+            }
+        }
+    }
+}
+
+
+import example1_scan.Scan;
+import example2_cinema.Projection;
+import example2_cinema.TicketsSelling;
+import task1_task2_racing.CarRacer;
+import task1_task2_racing.CarRacing;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        
+
+        { // Week 12 Task 1 Car Racing
+
+            CarRacer ivan = new CarRacer("Ivan");
+            CarRacer angel = new CarRacer("Angel");
+
+            CarRacing carRacing = new CarRacing(20);
+            carRacing.addRacer(angel);
+            carRacing.addRacer(ivan);
+
+            carRacing.race();
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            carRacing.displayRankList();
+
+        }
+
+        { // Week 12 Task 2 Car Racing and Fueling
+
+            CarRacer ivan = new CarRacer("Ivan");
+            CarRacer angel = new CarRacer("Angel");
+
+            CarRacing carRacing = new CarRacing(20, 100);
+            carRacing.addRacer(angel);
+            carRacing.addRacer(ivan);
+
+            carRacing.startFueling(ivan, 80);
+            carRacing.startFueling(angel, 40);
+
+
+        }
+    }
+}

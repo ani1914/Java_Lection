@@ -1,0 +1,141 @@
+Да се реализира процесът произвеждане и консумиране на ресурси (producer - consumer). Необходимо е количеството ресурси, което се произвежда да се консумира веднага, след това се произвежда ново количество ресурси, което се консумира и т.н. 
+Пример:
+Произведени столове: 5 броя
+Закупени столове: 5 броя
+Произведени столове: 10 броя
+Закупени столове: 10 броя
+
+
+package example3_producer_consumer;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class Consumer implements Runnable {
+
+    Resource resource;
+    Thread thread;
+
+    public Consumer(Resource resource) {
+        this.resource = resource;
+        this.thread = new Thread(this, "example3_producer_consumer.Consumer");
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            this.resource.getQuantity();
+        }
+    }
+}
+
+
+package example3_producer_consumer;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class Producer implements Runnable {
+    
+    Resource resource;
+    Thread thread;
+    
+    public Producer(Resource resource) {
+        this.resource = resource;
+        this.thread = new Thread(this, "example3_producer_consumer.Producer");
+    }
+    
+    @Override
+    public void run() {
+        int sourceCounter = 0;
+        while (true) {
+            this.resource.setQuantity(sourceCounter++);
+        }
+    }
+    
+}
+
+
+package example3_producer_consumer;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author Kostadinova
+ */
+public class Resource {
+
+    private int quantity;
+    private boolean valueSet = false;
+
+    synchronized public int getQuantity() {
+        while (!valueSet) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                System.out.println("Interruption!");
+            }
+        }
+        System.out.println("Consumed quantity: " + quantity);
+        valueSet = false;
+        notify();
+        return quantity;
+    }
+
+    public synchronized void setQuantity(int quantity) {
+        while (valueSet) {
+            try {
+                wait();
+            } catch (InterruptedException ex) {
+                System.out.println("Interruption!");
+            }
+        }
+        this.quantity = quantity;
+        valueSet = true;
+        System.out.println("Produced quantity: " + quantity);
+        notify();
+    }
+}
+
+
+
+import example1_scan.Scan;
+import example2_cinema.Projection;
+import example2_cinema.TicketsSelling;
+import task1_task2_racing.CarRacer;
+import task1_task2_racing.CarRacing;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        
+        { // Week 12 Example 3 example3_producer_consumer.Producer and example3_producer_consumer.Consumer, Interthread Communication: methods wait(), notify() and notifyAll()
+//            example3_producer_consumer.Resource computer = new example3_producer_consumer.Resource();
+//            example3_producer_consumer.Producer ibm = new example3_producer_consumer.Producer(computer);
+//            example3_producer_consumer.Consumer stemo = new example3_producer_consumer.Consumer(computer);
+//            Thread ibmThread = new Thread(ibm);
+//            Thread stemoThread = new Thread(stemo);
+//            ibmThread.start();
+//            stemoThread.start();
+        }
+
+        
+    }
+}

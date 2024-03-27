@@ -1,0 +1,224 @@
+Дадена е йерархията от класове:
+Базов клас Търговски обект (TradeCener) със свойства: име, адрес и данък печалба.
+Клас наследник Кино (MovieTheather) със свойства: цена за един билет и брой продадени билети. 
+Да се сериализират следните данни за обект от клас Кино: името на Киното, цената на билета и броя на продадените билети.
+
+
+
+import java.io.Serializable;
+
+public class Car extends Vehicle implements Serializable {
+
+    public static final long serialVersionUID = 1234L;
+    private boolean isWagon;
+    private transient int numberOfSeats;
+
+    public Car(double price, String color, boolean isWagon) {
+        super();
+    }
+
+    public Car(boolean isWagon, int numberOfSeats, double price, String color) {
+        super(price, color);
+        this.isWagon = isWagon;
+        this.numberOfSeats = numberOfSeats;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "Car{" +
+                "isWagon=" + isWagon +
+                ", numberOfSeats=" + numberOfSeats +
+                '}';
+    }
+}
+
+
+public class MovieTheatre extends TradeCenter {
+
+    public static final long serialVersionUID = 123456789L;
+
+    private int numberOfTicketsSold;
+    private double pricePerTicket;
+
+    public MovieTheatre() {
+    }
+
+    public MovieTheatre(int numberOfTicketsSold, double pricePerTicket, String name, String address) {
+        super(name, address);
+        this.numberOfTicketsSold = numberOfTicketsSold;
+        this.pricePerTicket = pricePerTicket;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "MovieTheater{" +
+                "numberOfTicketsSold=" + numberOfTicketsSold +
+                ", pricePerTicket=" + pricePerTicket +
+                '}';
+    }
+
+}
+
+
+
+import java.io.Serializable;
+
+public abstract class TradeCenter implements Serializable {
+
+    protected String name;
+    transient protected String address;
+    protected static double tax;
+
+    public TradeCenter() {
+    }
+
+    public TradeCenter(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "name=" + name + ", address=" + address + ", ";
+    }
+}
+
+
+import java.io.Serializable;
+public class Vehicle implements Serializable{
+
+    protected double price;
+    protected String color;
+
+    public Vehicle() {
+    }
+
+    public Vehicle(double price, String color) {
+        this.price = price;
+        this.color = color;
+
+    }
+
+    @Override
+    public String toString() {
+        return "Vehicle{" + "price=" + price + ", color=" + color + '}';
+    }
+
+}
+
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    
+    // Task 3
+    public static void serializeMovieTheatre(String filePath, MovieTheatre movieTheatre) {
+        try (FileOutputStream fos = new FileOutputStream(filePath);
+             ObjectOutputStream outputStream = new ObjectOutputStream(fos);) {
+            outputStream.writeObject(movieTheatre);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Task 3
+    public static MovieTheatre deserializeMovieTheatre(String filePath) {
+        MovieTheatre movieTheatre = null;
+        try (FileInputStream fis = new FileInputStream(filePath);
+             ObjectInputStream inputStream = new ObjectInputStream(fis);) {
+
+            movieTheatre = (MovieTheatre) inputStream.readObject();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return movieTheatre;
+    }
+
+    // Serialize Car Example
+    public static void serializeCar(String filePath, Car car) {
+        try (FileOutputStream fos = new FileOutputStream(filePath);
+             ObjectOutputStream outputStream = new ObjectOutputStream(fos);) {
+            outputStream.writeObject(car);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Deserialize Car Example
+    public static Car deserializeCar(String filePath) {
+        Car car = null;
+        try (FileInputStream fis = new FileInputStream(filePath);
+             ObjectInputStream inputStream = new ObjectInputStream(fis);) {
+
+            car = (Car) inputStream.readObject();
+
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return car;
+    }
+
+    static void p(String s) {
+        System.out.println(s);
+    }
+
+    public static void main(String[] args) {
+
+        // Creating folder named "files" in the project folder
+        File filesDirectory = new File("files");
+        System.out.println("Folder named files is created: " + filesDirectory.mkdir());
+
+
+        
+        //Task 3
+        {
+            String filePath = "files/MovieTheatre.ser";
+            int numberOfTicketsSold = 50;
+            double pricePerTicket = 10;
+            String name = "Arena";
+            String address = "Sofia";
+
+            MovieTheatre movieTheatre = new MovieTheatre(numberOfTicketsSold, pricePerTicket, name, address);
+
+            serializeMovieTheatre(filePath, movieTheatre);
+
+            System.out.println(deserializeMovieTheatre(filePath));
+        }
+
+        // Working with File example
+        {
+            File f1 = new File("/java/COPYRIGHT");
+            p("File Name: " + f1.getName());
+            p("Path: " + f1.getPath());
+            p("Abs Path: " + f1.getAbsolutePath());
+            p("Parent: " + f1.getParent());
+            p(f1.exists() ? "exists" : "does not exist");
+            p(f1.canWrite() ? "is writeable" : "is not writeable");
+            p(f1.canRead() ? "is readable" : "is not readable");
+            p("is " + (f1.isDirectory() ? "" : "not" + " a directory"));
+            p(f1.isFile() ? "is normal file" : "might be a named pipe");
+            p(f1.isAbsolute() ? "is absolute" : "is not absolute");
+            p("File last modified: " + f1.lastModified());
+            p("File size: " + f1.length() + " Bytes");
+        }
+
+        // Serialization Example Vehicles and Cars
+        {
+            String filePath = "files/car.ser";
+            {
+                Car car = new Car(true, 5, 12000, "black");
+                serializeCar(filePath, car);
+                System.out.println(deserializeCar(filePath));
+            }
+        }
+    }
+}

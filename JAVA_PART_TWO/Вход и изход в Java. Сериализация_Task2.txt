@@ -1,0 +1,150 @@
+Даден е клас Стока (Goods), който е описан с име и цена:
+Създайте метод, който записва във файл данните за обект от клас стока (използвайте метод toString()) Данните за всеки обект се записват на нов ред.
+Създайте метод, който чете от файл данните за обект от клас Стока. Методът трябва да връща сумата от цените на всички стоки.
+
+
+public class Goods {
+
+    private String name;
+    private double price;
+
+    public Goods() {
+    }
+
+    public Goods(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{ " + "name=" + name + ", price=" + price + "}";
+    }
+
+}
+
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    
+    //Task 2
+    public static void writeGoods(String outputFilename, Goods goods) {
+        FileWriter fout = null;
+        try {
+            fout = new FileWriter(new File(outputFilename), true);
+            if (goods != null) {
+                fout.append(goods.toString() + System.lineSeparator());
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found " + e);
+        } catch (IOException e) {
+            System.out.println("IOException " + e);
+        } finally {
+            try {
+                if (fout != null) {
+                    fout.close();
+                }
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+        }
+    }
+
+    // Task 2
+    public static List<String> readGoodsFromFile(String inputFilename) {
+        List<String> listOfGoods = new ArrayList<>();
+        try (FileReader fis = new FileReader(new File(inputFilename))) {
+            BufferedReader bufferedReader = new BufferedReader(fis);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                listOfGoods.add(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return listOfGoods;
+    }
+
+    // Task 2
+    public static List<Double> findPriceInGoodsString(List<String> listOfGoods) {
+        List<Double> listOfPrices = new ArrayList<>();
+        for (String goodsData : listOfGoods) {
+            listOfPrices.add(Double.parseDouble(goodsData.
+                    substring(goodsData.indexOf("=", goodsData.indexOf("price=")) + 1,
+                            goodsData.lastIndexOf("}"))));
+        }
+        return listOfPrices;
+    }
+
+    // Task 2
+    public static double sumPrices(List<Double> listOfPrices) {
+        double sum = 0;
+        for (Double goodsPrice : listOfPrices) {
+            sum += goodsPrice;
+        }
+        return sum;
+    }
+
+    
+
+    public static void main(String[] args) {
+
+        // Creating folder named "files" in the project folder
+        File filesDirectory = new File("files");
+        System.out.println("Folder named files is created: " + filesDirectory.mkdir());
+
+
+        
+        // Task 2
+        {
+            // Task 2.1
+            Goods goods1 = new Goods("meat", 15);
+            Goods goods2 = new Goods("butter", 6);
+            Goods goods3 = new Goods("milk", 2);
+
+            String filename = "files/GoodsData.txt";
+            writeGoods(filename, goods1);
+            writeGoods(filename, goods2);
+            writeGoods(filename, goods3);
+
+            // Task 2.2
+            List<String> goodFromFile = new ArrayList<>(readGoodsFromFile(filename));
+            List<Double> goodsPrices = new ArrayList<>(findPriceInGoodsString(goodFromFile));
+            System.out.println("The sum of the prices of the goods is: " +
+                    sumPrices(goodsPrices));
+        }
+
+        
+        // Working with File example
+        {
+            File f1 = new File("/java/COPYRIGHT");
+            p("File Name: " + f1.getName());
+            p("Path: " + f1.getPath());
+            p("Abs Path: " + f1.getAbsolutePath());
+            p("Parent: " + f1.getParent());
+            p(f1.exists() ? "exists" : "does not exist");
+            p(f1.canWrite() ? "is writeable" : "is not writeable");
+            p(f1.canRead() ? "is readable" : "is not readable");
+            p("is " + (f1.isDirectory() ? "" : "not" + " a directory"));
+            p(f1.isFile() ? "is normal file" : "might be a named pipe");
+            p(f1.isAbsolute() ? "is absolute" : "is not absolute");
+            p("File last modified: " + f1.lastModified());
+            p("File size: " + f1.length() + " Bytes");
+        }
+
+       
+    }
+}

@@ -1,0 +1,89 @@
+Потребителят трябва да въвежда цена на стока през конзолата. Използвайте клас Scanner. Валидирайте данните, които се въвеждат (потребителят трябва да въвежда положително число). Процесът на въвеждане трябва да продължи докато не се въведе коректна стойност. Ако потребителят не въведе число, да се хвърля InputMismatchException
+
+
+public class Goods {
+
+    private String name;
+    private double price;
+
+    public Goods() {
+    }
+
+    public Goods(String name, double price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{ " + "name=" + name + ", price=" + price + "}";
+    }
+
+}
+
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    //Task 1
+    public static double readGoodsPrice() {
+        System.out.println("Enter the price of the goods: ");
+        double price = 0;
+        try {
+            Scanner scanner = new Scanner(System.in);
+            while ((price = scanner.nextDouble()) <= 0) {
+                System.out.println("Enter positive number!");
+            }
+        } catch (InputMismatchException e) {
+            e.printStackTrace();
+        }
+        return price;
+    }
+
+    
+    public static void main(String[] args) {
+
+        // Creating folder named "files" in the project folder
+        File filesDirectory = new File("files");
+        System.out.println("Folder named files is created: " + filesDirectory.mkdir());
+
+
+        // Task 1
+        {
+            readGoodsPrice();
+        }
+
+        
+
+        // Working with File example
+        {
+            File f1 = new File("/java/COPYRIGHT");
+            p("File Name: " + f1.getName());
+            p("Path: " + f1.getPath());
+            p("Abs Path: " + f1.getAbsolutePath());
+            p("Parent: " + f1.getParent());
+            p(f1.exists() ? "exists" : "does not exist");
+            p(f1.canWrite() ? "is writeable" : "is not writeable");
+            p(f1.canRead() ? "is readable" : "is not readable");
+            p("is " + (f1.isDirectory() ? "" : "not" + " a directory"));
+            p(f1.isFile() ? "is normal file" : "might be a named pipe");
+            p(f1.isAbsolute() ? "is absolute" : "is not absolute");
+            p("File last modified: " + f1.lastModified());
+            p("File size: " + f1.length() + " Bytes");
+        }
+
+        
+    }
+}

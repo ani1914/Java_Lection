@@ -1,0 +1,99 @@
+Реализирайте клас InsufficientNumberOfRoomsException, който да наследява клас Exception и описва недостатъчен брой на стаи в хотел. Класът се състои от една член-данна: брой на стаите (numberOfRooms). Имплементирайте следните методи:
+Конструктор с един параметър – броя на стаите 
+Метод, който връща броя на стаите
+Реализирайте клас Hotel, който се определя от брой на стаите в хотел и списък с номера стаи. Имплементирайте следните методи:
+Конструктор с един параметър (брой стаи)
+Метод rentRoom(), който служи за наемане на стая и хвърля изключение InsufficientNumberOfRoomsException, при опит за добавяне на стая, ако е достигнат максималния брой на стаите
+Създайте обект от клас хотел и тествайте резултатите от изпълнение на метода за наемане на стая.
+
+package hotel;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author Kostadinova
+ */
+public class Hotel {
+    private int numberOfRooms;
+    private List<Integer> rooms;
+
+    public Hotel(int numberOfRooms) {
+
+        this.numberOfRooms = numberOfRooms;
+        this.rooms = new ArrayList<>();
+    }
+
+    public void rentRoom(int roomNumber) throws RoomIsRentedException, InsufficientNumberOfRoomsException {
+
+        if (rooms.size() >= numberOfRooms) {
+            throw new InsufficientNumberOfRoomsException(numberOfRooms);
+        }
+        else {
+            if (!rooms.contains(roomNumber)) {
+                rooms.add(roomNumber);
+            }
+            else {
+                throw new RoomIsRentedException(roomNumber);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "hotel.Hotel{" +
+                "numberOfRooms=" + numberOfRooms +
+                ", rooms=" + rooms +
+                '}';
+    }
+}
+
+
+package hotel;
+
+public class InsufficientNumberOfRoomsException extends Exception {
+    private final int numberOfRooms;
+
+    public InsufficientNumberOfRoomsException(int numberOfRooms) {
+        this.numberOfRooms = numberOfRooms;
+    }
+
+    public int getNumberOfRooms() {
+        return numberOfRooms;
+    }
+
+    @Override
+    public String toString() {
+        return "InsufficientNumberOfRoomsException{" +
+                "numberOfRooms=" + numberOfRooms +
+                '}';
+    }
+}
+
+
+package hotel;
+
+public class RoomIsRentedException extends Exception {
+
+    private final int roomNumber;
+
+    public RoomIsRentedException(int roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public int getRoomNumber() {
+        return roomNumber;
+    }
+
+    @Override
+    public String toString() {
+        return "hotel.RoomIsRentedException{" +
+                "roomNumber=" + roomNumber +
+                '}';
+    }
+}
+
