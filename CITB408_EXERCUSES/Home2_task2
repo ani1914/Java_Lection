@@ -1,0 +1,159 @@
+//am_96288
+//Class Studio
+package com.company;
+
+import java.math.BigDecimal;
+
+public class Studio {
+    private final long id;
+    private double pricePerHour; // price za 1 chas
+    private int maxWorkingHours;// max chasove na zaetost
+    private int workedHours; //broi chasove na zaetost
+    private static double minPricePerHour; //min cena na chas za koeyo moje da se naeme
+    private double currencyEuro;//cursa na evroto
+
+    public Studio(long id,int maxWorkingHours) {
+        this.id = id;
+        setMaxWorkingHours(maxWorkingHours);
+    }
+
+    public static void setMinPricePerHour(double minPricePerHour) {
+        if (minPricePerHour>=0) {
+            Studio.minPricePerHour = minPricePerHour;
+        }
+        else {
+            Studio.minPricePerHour=0;
+        }
+    }
+
+    public void setPricePerHour(double pricePerHour) {
+        if (pricePerHour>minPricePerHour){
+        this.pricePerHour =pricePerHour;
+         }
+        else {
+            this.pricePerHour=minPricePerHour;
+        }
+    }
+
+    public void setMaxWorkingHours(int maxWorkingHours) {
+        if(maxWorkingHours>=0 && maxWorkingHours<=24) {
+            this.maxWorkingHours = maxWorkingHours;
+        }
+        else {
+            this.maxWorkingHours=24;
+        }
+    }
+
+    public void setWorkedHours(int workedHours) {
+        if (workedHours<=maxWorkingHours) {
+            this.workedHours = workedHours;
+        }
+        else {
+            this.workedHours=maxWorkingHours;
+        }
+    }
+
+    public void setCurrencyEuro(double currencyEuro) {
+        this.currencyEuro = currencyEuro;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public double getPricePerHour() {
+        return pricePerHour;
+    }
+
+
+    public int getMaxWorkingHours() {
+        return maxWorkingHours;
+    }
+
+    public int getWorkedHours() {
+        return workedHours;
+    }
+
+    public static double getMinPricePerHour() {
+        return minPricePerHour;
+    }
+
+    public double getCurrencyEuro() {
+        return currencyEuro;
+    }
+    public BigDecimal TurnoverLev(){
+        BigDecimal price=BigDecimal.valueOf(this.pricePerHour);
+        return price.multiply(BigDecimal.valueOf(this.workedHours));
+    }
+    public BigDecimal TurnoverEuro(){
+        BigDecimal turnover = TurnoverLev().multiply(BigDecimal.valueOf(this.currencyEuro));
+        return turnover;
+    }
+    public int studioWithLargerPrice(Studio studio){
+
+       if (this.pricePerHour>studio.pricePerHour){
+           return 1;
+       }
+       else {
+           return 2;
+       }
+    }
+    public boolean isFirstStudioWithGreaterTurnover(Studio studio){
+        if (this.TurnoverLev().compareTo(studio.TurnoverLev( ))>0){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}
+
+//Class Main
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner input=new Scanner(System.in);
+
+        long id = input.nextLong();//
+
+        int maxWorkingHours = input.nextInt(); //
+
+        double minPricePerHour = input.nextDouble();//
+
+        double currencyEuro = input.nextDouble();//
+
+        double pricePerHour = input.nextDouble();//
+
+        int workedHours = input.nextInt();//
+        Studio studio1= new Studio(id,maxWorkingHours);
+        studio1.setMinPricePerHour(minPricePerHour);
+        studio1.setPricePerHour(pricePerHour);
+        studio1.setWorkedHours(workedHours);
+        studio1.setCurrencyEuro(currencyEuro);
+        studio1.getPricePerHour();
+        studio1.getWorkedHours();
+        System.out.println(studio1.TurnoverLev());
+        System.out.println(studio1.TurnoverEuro());
+
+        long id2 = input.nextLong();
+
+        int maxWorkingHours2 =input.nextInt();
+
+        double pricePerHour2 = input.nextDouble();
+
+        int workedHours2 = input.nextInt();
+
+        Studio studio2=new Studio(id2,maxWorkingHours2);
+        studio2.setPricePerHour(pricePerHour2);
+        studio2.setWorkedHours(workedHours2);
+
+        System.out.println(studio1.studioWithLargerPrice(studio2));
+      System.out.println(studio1.isFirstStudioWithGreaterTurnover(studio2));
+
+
+    }
+}
