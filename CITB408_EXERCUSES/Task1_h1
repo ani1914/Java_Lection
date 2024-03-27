@@ -1,0 +1,49 @@
+//am_96288- HackerRank
+package com.company;
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        int bottom,top,difference,counter=0,counter1=0,counter2=0,newNumber=0;
+        Scanner input= new Scanner(System.in);
+        bottom=input.nextInt();
+        top=input.nextInt();
+        difference=input.nextInt();
+        for (int i=bottom;i<=top;i++){
+            if(i<10){
+                newNumber=i;
+            }
+                else if (i<100){
+                    counter1=(i%10)*10;
+                    counter2=i/10;
+                    newNumber=counter1+counter2;
+            }
+            else if (i<1000){
+                counter1=(i%100)*10;
+                counter2=i/100;
+                newNumber=counter1+counter2;
+            }
+            else if (i<10000){
+                counter1=(i%1000)*10;
+                counter2=i/1000;
+                newNumber=counter1+counter2;
+            }
+            else if (i<100000){
+                counter1=(i%10000)*10;
+                counter2=i/10000;
+                newNumber=counter1+counter2;
+            }
+           if ((newNumber-i)>difference){
+               counter++;
+           }
+
+
+
+
+
+        }
+        System.out.println(counter);
+    }
+}
