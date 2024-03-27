@@ -1,0 +1,82 @@
+//am_96288
+//Class Manager
+package com.company;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+
+public class Manager {
+    private final String name;
+    private LocalDate date;
+
+    public  Manager(String name){
+        this.name=name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+    public void setHiringDate(LocalDate date){
+        this.date=date;
+    }
+    public LocalDate getHiringDate(){
+        LocalDate now = LocalDate.now();
+        if (date.isAfter(now)) {
+
+            date=LocalDate.of(2020,1,1);
+        }
+        return date;
+    }
+    public long numberOfYearsInCompanyTill(LocalDate end) {
+
+
+        return ChronoUnit.YEARS.between(this.date, end);
+
+    }
+
+
+
+}
+
+//Class Main
+package com.company;
+import java.time.LocalDate;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        Scanner input=new Scanner(System.in);
+
+
+        String name =input.next();
+
+        int hiringYear = input.nextInt();
+
+        int hiringMonth = input.nextInt();
+
+        int hiringDay = input.nextInt();
+
+        int currentYear = input.nextInt();
+
+        int currentMonth = input.nextInt();
+
+        int currentDay = input.nextInt();
+        Manager Author=new Manager(name);
+        Author.setHiringDate(LocalDate.of(hiringYear,hiringMonth,hiringDay));
+        LocalDate end=LocalDate.of(currentYear,currentMonth,currentDay);
+
+        System.out.println(Author.getHiringDate());
+        System.out.println(Author.numberOfYearsInCompanyTill(end));
+
+
+
+
+    }
+}
