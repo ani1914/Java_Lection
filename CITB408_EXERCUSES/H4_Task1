@@ -1,0 +1,122 @@
+//am96288
+
+//interface Deliverable 
+public interface Deliverable {
+     double deliveryPrice();
+
+}
+
+//lass DeliverableItem 
+public abstract class DeliverableItem implements  Deliverable{
+    static boolean toClientsAddress;
+    static double additionalPrice;
+
+    public static void setAdditionalPrice(double additionalPrice) {
+        if (additionalPrice>0)
+        DeliverableItem.additionalPrice = additionalPrice;
+        else
+            DeliverableItem.additionalPrice=1;
+    }
+
+    public static double getAdditionalPrice() {
+        return additionalPrice;
+    }
+
+    public DeliverableItem(boolean toClientsAddress) {
+
+        this.toClientsAddress = toClientsAddress;
+
+
+    }
+
+
+}
+
+//class Material
+public class Material {
+    String materialName;
+    boolean isFragile;
+
+    public Material(String materialName, boolean isFragile) {
+        this.materialName = materialName;
+        this.isFragile = isFragile;
+    }
+    public boolean MaterialIsFragile(){
+        if (this.isFragile)
+        return true;
+        else
+        return false;
+    }
+}
+
+//class WeightedItem
+public class WeightedItem extends  Material implements Deliverable {
+   private double weight ;
+    private double pricePerKg;
+
+    public WeightedItem(String materialName, boolean isFragile, double weight, double pricePerKg) {
+        super(materialName, isFragile);
+        if (weight>0)
+        this.weight = weight;
+        else
+            this.weight=1;
+        if (pricePerKg>0)
+        this.pricePerKg = pricePerKg;
+        else
+            this.pricePerKg=1;
+    }
+
+    @Override
+    public double deliveryPrice() {
+        if (isFragile) {
+            double total=0;
+            if (DeliverableItem.toClientsAddress) {
+                 total = weight * pricePerKg;
+                total += DeliverableItem.additionalPrice;
+
+            } else {
+                total = weight * pricePerKg;
+
+            }
+         double  total1=total+(total*0.01);
+            return total1;
+
+        }
+        else
+        {
+            double total=0;
+            if (DeliverableItem.toClientsAddress) {
+                total = weight * pricePerKg;
+                total += DeliverableItem.additionalPrice;
+
+            } else {
+                total = weight * pricePerKg;
+
+            }
+            return total;
+        }
+    }
+}
+
+//class Document
+public class Document extends DeliverableItem implements  Deliverable  {
+    private  double minPrice;
+
+    public Document(boolean toClientsAddress, double minPrice) {
+        super(toClientsAddress);
+        if (minPrice>0)
+        this.minPrice = minPrice;
+        else
+            this.minPrice=1;
+    }
+
+    @Override
+    public double deliveryPrice() {
+       if (toClientsAddress){
+           minPrice+=additionalPrice;
+           return minPrice;
+       }
+       else
+           return minPrice;
+    }
+}
