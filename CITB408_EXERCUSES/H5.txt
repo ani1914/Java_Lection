@@ -1,0 +1,101 @@
+//Task1
+
+Служителят (Employee) се определя от: име, id и брой часове, които е работил в месеца. Служителят може да бъде на постоянен договор (PERMANENT), нает почасово (PART TIME), или да е на стаж (TRAINEE). От това на какъв тип договор е нает служителят, се определя и минималното му почасово възнаграждение. Освен това всеки от служителите получава допълнително възнаграждение, което е индивидуално. Цялата заплата на служителя се определя от броя на изработените часове за месеца и минималното му почасово възнаграждение + допълнителното почасово възнаграждение.
+
+В клас Служител (Employee) е необходимо да се реализират минимум следните методи:
+
+Метод, който връща стойността на заплатата - salary()
+Метод за увеличаване на допълнителното възнаграждение на служителя с %, който се предава като аргумент на метода - increaseSalary().
+Компанията (Company) се определя от: име, максимален брой служители и списък със служители, които работят в компанията.
+
+В клас Компания (Company) е необходимо да се реализират минимум следните методи:
+
+Метод за наемане на служители на работа - hireEmployee(). Един служител не трябва да се назначава на работа повече от веднъж. В компанията не може да се намат служители, ако е достигнат максималният брой служители в компанията.
+Метод за освобождаване на служител от работа - fireEmployee(). Този метод трябва да премахва уволнения служител от списъка със служители в компанията.
+Метод, който връща средната заплата за служителите в компанията - averageSalary().
+Метод за увеличаване на допълнителното възнаграждение на всички служители в компанията с един и същи %, който се предава като аргуемент на метода - increaseSalaries().
+Метод, който показва средната заплата на служителите, които са наети на определен тип договор (например на стажантите, наетите почасово или тези на постоянен договор) - averageSalaryPerContractType(). Типът договор трябва да се предава като аргумент на метода.
+Упътване: за всички стойности, които не са цели числа, използвайте BigDecimal. Използвайте точност до втори знак след десетичната точка и закръгляване нагоре на местата, къдете се налага деление.
+
+Пример: BigDecimal.valueOf(200).divide(BigDecimal.valueOf(3), 2, RoundingMode.HALF_UP)
+
+Input Format
+
+TechComp    // name of the company
+5           // max number of employees that work at the company
+20 15 10	// minimal salary per hour for the PERMANENT, PART_TIME and TRAINEE contract type
+Maria Anna Pavel Monika Toni Moni  // names of the employees
+60 100 150 80 150 80               // worked hours of the employees
+PERMANENT PERMANENT PART_TIME PERMANENT PERMANENT PART_TIME  // contract types of the employees
+20.0 40.0 20.0 20.0 20.0 40.0	   // additional salary per hour of the employees
+PERMANENT   // contract type passed as argument to the method that calculates the average salary by contract type
+5           // percentage for increasing the additional salary per hour
+Constraints
+
+В компанията не може служител да се наеме повече от веднъж.
+В компанията не може да се наемат повече от максималния брой служители.
+Процентът, който служи за увеличаване на заплата на един служител и на всички служители в компанията трябва да бъде > 0.
+Output Format
+
+4550.00    // average salary 
+4686.67	   // average salary after incresing all employees additional salary per hour
+4330.00    // average salary by contract type
+Sample Input 0
+
+TechComp 
+5      
+20.0 15.0 10.0     
+Maria Anna Pavel Monika Toni Moni
+60 100 150 80 150 80
+PERMANENT PERMANENT PART_TIME PERMANENT PERMANENT PART_TIME
+20.0 40.0 20.0 20.0 20.0 40.0         
+PERMANENT
+5        
+Sample Output 0
+
+4570.00
+4698.00
+4522.50
+Explanation 0
+
+Hired employees are: Maria, Anna, Pavel, Monika and Toni. Moni is not hired, because the max number of employees is 5.
+
+The salary per hour for the first employee (Maria) is 80: 20.0 (minSalary per hour for PERMANENT contract type) + 20.0 (additional salalary per hour for Maria)
+
+The salary of Maria is 2400: 60 (worked whours for Maria) * 40 (salary per hour)
+
+The salary of Anna is 6000: 100 (worked whours for Maria) * 60 (salary per hour)
+
+The salary of Pavel is 5250: 150 (worked whours for Maria) * 35 (salary per hour)
+
+The salary of Monika is 3200: 80 (worked whours for Maria) * 40 (salary per hour)
+
+The salary of Toni is 6000: 150 (worked whours for Maria) * 40 (salary per hour)
+
+The average salary of the 5 employees is: 22850 / 5 = 4570
+
+Increasing the additional salaies with 5%. Additional salaries become 21.0 42.0 21.0 21.0 21.0
+
+The average salary of the 5 employees, after the additional salaries are increased is: 23490 / 5 = 4698
+
+The average salary of the 4 employees that are hired on PERMANENT contract type, after the additional salaries are increased is: 18090 / 4 = 4522.50
+
+Sample Input 1
+
+TechComp 
+0      
+20.0 15.0 10.0     
+Maria Anna Pavel Monika Toni Moni
+60 100 150 80 150 80
+PERMANENT PERMANENT PART_TIME PERMANENT PERMANENT PART_TIME
+20.0 40.0 20.0 20.0 20.0 40.0         
+PERMANENT
+5   
+Sample Output 1
+
+0
+0
+0
+Explanation 1
+
+Because the max number of employees is 0, no employees can be hired. The average salary and the average salary by contract type are 0.
